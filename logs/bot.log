@@ -294,3 +294,6 @@ Song : {title}
 2026-09-03 04:27:02 | bot | INFO | Bot is running and listening for commands...
 2026-09-03 04:37:04 | bot | INFO | Shutting down bot...
 2026-09-03 04:37:04 | bot | INFO | Bot shutdown complete
+2026-09-03 05:42:52 | bot | INFO | YouTube cookies are not configured; continuing without authenticated cookies.
+2026-09-03 05:42:52 | bot | WARNING | YouTube cookie configuration is invalid.
+2026-09-03 05:42:53 | bot | INFO | YouTube cookies loaded from YOUTUBE_COOKIES_B64.

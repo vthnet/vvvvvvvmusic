@@ -3,10 +3,14 @@ from app.ui.messages import bot_api_html, help_text, player_text, render_templat
 Main bot file for VTH Music Bot - Professional Telegram music player
 """
 import asyncio
+import base64
 import json
+import os
 import random
 import re
+import tempfile
 from html import escape
+from pathlib import Path
 from typing import Optional
 from datetime import datetime
 
@@ -192,6 +196,12 @@ class MusicBot:
         
         except Exception as e:
             log_error(e, "Metadata download failed")
+            error_text = str(e)
+            if "Sign in to confirm" in error_text or "not a bot" in error_text:
+                raise ValueError(
+                    "YouTube requires authentication. Configure fresh cookies "
+                    "with YOUTUBE_COOKIES_B64 and try again."
+                ) from e
             raise ValueError(f"Failed to get track: {str(e)}")
 
     async def _refresh_player(self, chat_id: int):
@@ -526,6 +536,26 @@ class MusicBot:
         except Exception:
             return None
 
+    async def _ensure_user_membership(self, chat_id: int):
+        """Ensure the account used by PyTgCalls is a member of the group."""
+        try:
+            await self.user_app.get_chat_member(chat_id, "me")
+            return
+        except pyrogram_errors.UserNotParticipant:
+            pass
+
+        invite = await self.bot_app.create_chat_invite_link(
+            chat_id,
+            member_limit=1,
+            creates_join_request=False,
+        )
+        try:
+            await self.user_app.join_chat(invite.invite_link)
+        except pyrogram_errors.UserAlreadyParticipant:
+            pass
+
+        await self.user_app.get_chat_member(chat_id, "me")
+
     async def _play_real_track(self, chat_id: int, title: str, url: str):
         """Start playback of a track."""
         if not url:
@@ -555,6 +585,8 @@ class MusicBot:
                 shuffle=state.shuffle,
                 loop=state.loop
             )
+
+            await self._ensure_user_membership(chat_id)
             
             # Delete old player message
             old_message_id = self.player_messages.get(chat_id)

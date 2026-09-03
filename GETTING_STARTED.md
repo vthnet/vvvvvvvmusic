@@ -84,6 +84,15 @@ STRING_SESSION=BQAsomeverylong...sessionstringhere...xyz
 GENIUS_API_KEY=
 ```
 
+### YouTube Authentication
+
+If yt-dlp reports `Sign in to confirm you're not a bot`, configure fresh YouTube
+browser cookies. Export them in Netscape format, Base64-encode the file, and set
+the result as `YOUTUBE_COOKIES_B64` in the deployment environment. Do not commit
+the cookie file or put its contents in the Dockerfile.
+
+For a local cookie file, set `YOUTUBE_COOKIES` to its mounted path instead.
+
 ### Step 4: Verify Configuration
 
 Run the validator again to confirm everything is correct:
