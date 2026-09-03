@@ -1,12 +1,11 @@
 """Shared yt-dlp configuration for YouTube requests."""
 import base64
-import logging
 import os
 import tempfile
 from pathlib import Path
+from app.utils.logger import bot_logger
 
 
-LOGGER = logging.getLogger(__name__)
 COOKIE_FILE = Path(tempfile.gettempdir()) / "vth_youtube_cookies.txt"
 _cookie_source: tuple[str, str] | None = None
 _cookie_file: str | None = None
@@ -36,12 +35,12 @@ def get_youtube_cookie_file() -> str | None:
 
             _cookie_source = source
             _cookie_file = str(COOKIE_FILE)
-            LOGGER.info("YouTube cookies loaded from YOUTUBE_COOKIES_B64.")
+            bot_logger.info("YouTube cookies loaded from YOUTUBE_COOKIES_B64.")
             return _cookie_file
         except (OSError, ValueError):
             _cookie_source = source
             _cookie_file = None
-            LOGGER.warning("YouTube cookie configuration is invalid.")
+            bot_logger.warning("YouTube cookie configuration is invalid.")
             return None
 
     cookie_path = os.getenv("YOUTUBE_COOKIES", "").strip()
@@ -50,13 +49,13 @@ def get_youtube_cookie_file() -> str | None:
         if source != _cookie_source:
             _cookie_source = source
             _cookie_file = cookie_path
-            LOGGER.info("YouTube cookies loaded from YOUTUBE_COOKIES.")
+            bot_logger.info("YouTube cookies loaded from YOUTUBE_COOKIES.")
         return cookie_path
 
     if source != _cookie_source:
         _cookie_source = source
         _cookie_file = None
-        LOGGER.info("YouTube cookies are not configured; continuing without authenticated cookies.")
+        bot_logger.info("YouTube cookies are not configured; continuing without authenticated cookies.")
     return None
 
 
