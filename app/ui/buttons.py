@@ -109,7 +109,6 @@ def player_keyboard(chat_id, paused=False, autoplay=False, shuffle=False, loop="
                 button(DEFAULT_BUTTON_TEXT["replay"], f"player:replay:{chat_id}", emoji_key="replay", icon_only=True),
             ],
             [
-                button(DEFAULT_BUTTON_TEXT["download"], f"player:download:{chat_id}", emoji_key="download", icon_only=True),
                 button(DEFAULT_BUTTON_TEXT["close"], f"player:close:{chat_id}", emoji_key="close", icon_only=True),
             ],
         ]

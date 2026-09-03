@@ -1,89 +1,95 @@
 """Shared yt-dlp configuration for YouTube requests."""
-import base64
-import os
-import tempfile
-from pathlib import Path
+import asyncio
+
+import yt_dlp
+
 from app.utils.logger import bot_logger
 
 
-COOKIE_FILE = Path(tempfile.gettempdir()) / "vth_youtube_cookies.txt"
-_cookie_source: tuple[str, str] | None = None
-_cookie_file: str | None = None
-
-
-def get_youtube_cookie_file() -> str | None:
-    """Materialize configured YouTube cookies and return their local path."""
-    global _cookie_source, _cookie_file
-
-    cookies_b64 = os.getenv("YOUTUBE_COOKIES_B64", "").strip()
-    if cookies_b64:
-        source = ("base64", cookies_b64)
-        if source == _cookie_source and _cookie_file and COOKIE_FILE.is_file():
-            return _cookie_file
-
-        try:
-            encoded = "".join(cookies_b64.split())
-            cookie_data = base64.b64decode(encoded, validate=True)
-            if not cookie_data:
-                raise ValueError("empty cookie data")
-
-            COOKIE_FILE.write_bytes(cookie_data)
-            try:
-                os.chmod(COOKIE_FILE, 0o600)
-            except OSError:
-                pass
-
-            _cookie_source = source
-            _cookie_file = str(COOKIE_FILE)
-            bot_logger.info("YouTube cookies loaded from YOUTUBE_COOKIES_B64.")
-            return _cookie_file
-        except (OSError, ValueError):
-            _cookie_source = source
-            _cookie_file = None
-            bot_logger.warning("YouTube cookie configuration is invalid.")
-            return None
-
-    cookie_path = os.getenv("YOUTUBE_COOKIES", "").strip()
-    source = ("path", cookie_path)
-    if cookie_path and Path(cookie_path).is_file():
-        if source != _cookie_source:
-            _cookie_source = source
-            _cookie_file = cookie_path
-            bot_logger.info("YouTube cookies loaded from YOUTUBE_COOKIES.")
-        return cookie_path
-
-    if source != _cookie_source:
-        _cookie_source = source
-        _cookie_file = None
-        bot_logger.info("YouTube cookies are not configured; continuing without authenticated cookies.")
-    return None
-
-
 def youtube_ydl_opts(extra_options: dict | None = None) -> dict:
-    """Build yt-dlp options with optional shared YouTube authentication."""
+    """Build a shared yt-dlp configuration without cookie requirements."""
     options = {
         "quiet": True,
         "no_warnings": True,
         "noplaylist": True,
         "socket_timeout": 30,
-
-        # YouTube currently requires newer player-client handling
-        # for some authenticated requests.
-        "extractor_args": {
-            "youtube": {
-                "player_client": ["default", "web_embedded"]
-            }
+        "js_runtimes": {
+            "deno": {},
         },
     }
 
-    # Load YouTube cookies configured through Railway environment variables
-    # or a local cookie-file path.
-    cookie_file = get_youtube_cookie_file()
-    if cookie_file:
-        options["cookiefile"] = cookie_file
-
-    # Allow individual services to override/add yt-dlp options.
     if extra_options:
         options.update(extra_options)
 
     return options
+
+
+async def extract_audio_stream(source: str) -> dict:
+    """Resolve a fresh direct audio URL from a YouTube source without downloading to disk."""
+    if not source or not str(source).strip():
+        raise ValueError("No YouTube source URL or ID provided")
+
+    source_url = str(source).strip()
+    bot_logger.info(f"[YT] Extracting fresh audio stream: {source_url}")
+
+    try:
+        ydl_opts = youtube_ydl_opts({
+            "format": "bestaudio/best",
+            "download": False,
+            "extract_flat": False,
+            "noplaylist": True,
+        })
+
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = await asyncio.to_thread(
+                lambda: ydl.extract_info(source_url, download=False)
+            )
+
+        if not info:
+            raise ValueError("No audio stream found")
+
+        if info.get("_type") == "playlist":
+            entries = info.get("entries") or []
+            if not entries:
+                raise ValueError("No playlist entries available")
+            info = entries[0]
+        elif info.get("entries"):
+            entries = info["entries"]
+            if not entries:
+                raise ValueError("No video entries available")
+            info = entries[0]
+
+        stream_url = info.get("url")
+        if not stream_url:
+            formats = info.get("formats") or []
+            audio_formats = [
+                f for f in formats
+                if f.get("acodec") not in (None, "none")
+                and f.get("vcodec") in (None, "none")
+            ]
+            if not audio_formats:
+                raise ValueError("No playable audio stream available")
+            audio_formats.sort(
+                key=lambda f: (f.get("tbr") or 0, f.get("quality") or ""),
+                reverse=True,
+            )
+            stream_url = audio_formats[0].get("url")
+
+        if not stream_url:
+            raise ValueError("yt-dlp did not return a direct audio URL")
+
+        result = {
+            "url": stream_url,
+            "title": info.get("title") or "Unknown",
+            "video_id": info.get("id") or "",
+            "artist": info.get("uploader") or info.get("channel") or "Unknown",
+            "duration": int(info.get("duration") or 0),
+            "thumbnail": info.get("thumbnail") or "",
+            "webpage_url": info.get("webpage_url") or source_url,
+            "source_url": info.get("webpage_url") or source_url,
+        }
+        bot_logger.info(f"[YT] Fresh audio URL extracted for {result['video_id'] or source_url}")
+        return result
+    except Exception as exc:
+        bot_logger.exception(f"[YT] Extraction failed for {source_url}: {exc}")
+        raise

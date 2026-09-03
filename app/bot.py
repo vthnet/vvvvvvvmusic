@@ -3,14 +3,10 @@ from app.ui.messages import bot_api_html, help_text, player_text, render_templat
 Main bot file for VTH Music Bot - Professional Telegram music player
 """
 import asyncio
-import base64
 import json
-import os
 import random
 import re
-import tempfile
 from html import escape
-from pathlib import Path
 from typing import Optional
 from datetime import datetime
 
@@ -32,7 +28,7 @@ from pytgcalls.types import AudioQuality, GroupCallConfig, MediaStream, StreamEn
 
 # App imports
 from app import config
-from app.handlers.start import send_home, snap_video_path, to_pyrogram_keyboard
+from app.handlers.start import send_home, to_pyrogram_keyboard
 from app.player.state import PlayerManager
 from app.utils.logger import bot_logger, playback_logger, error_logger, log_command, log_error
 from app.utils.permissions import is_owner, is_group_admin, is_dj_or_admin, can_control_player, can_change_settings
@@ -40,9 +36,8 @@ from app.utils.helpers import safe_escape, format_duration, get_user_label, is_y
 from app.ui.buttons import favorites_keyboard, player_keyboard, home_keyboard
 from app.ui.messages import POWERED_BY, player_text, render_template, search_results_text, queue_text, favorites_text, history_text
 from app.services.search import search_youtube, get_track_info
-from app.services.downloader import download_audio, cleanup_download
 from app.services.lyrics import get_lyrics
-from app.services.youtube import youtube_ydl_opts
+from app.services.youtube import extract_audio_stream, youtube_ydl_opts
 from app.services.telegram_api import TelegramAPI
 from app.database.client import get_database, DatabaseClient
 from app.database.users import get_or_create_user, get_user_count, block_user, unblock_user, get_all_users
@@ -99,7 +94,6 @@ def _validate_credentials():
         print("   4. Run: python run.py")
         raise RuntimeError("Missing required configuration. See errors above.")
 
-
 class MusicBot:
     def __init__(self, token: str | None = None):
         """Initialize the music bot."""
@@ -136,73 +130,59 @@ class MusicBot:
             raise
 
     async def _download_metadata(self, query: str) -> dict:
-        """Download track metadata using yt-dlp."""
+        """Resolve source metadata for a YouTube track without storing a temporary stream URL."""
         ydl_opts = youtube_ydl_opts({
             "skip_download": True,
             "extract_flat": False,
             "default_search": "ytsearch",
             "format": "bestaudio/best",
         })
-        
+
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = await asyncio.to_thread(lambda: ydl.extract_info(query, download=False))
-                
-                if not info:
+
+            if not info:
+                raise ValueError("No music found")
+
+            if info.get("_type") == "playlist":
+                entries = info.get("entries") or []
+                if not entries:
                     raise ValueError("No music found")
-                
-                if info.get("_type") == "playlist":
-                    entries = info.get("entries") or []
-                    if not entries:
-                        raise ValueError("No music found")
-                    info = entries[0]
-                if info.get("entries"):
-                    entries = info["entries"]
-                    if not entries:
-                        raise ValueError("No music found")
-                    info = entries[0]
-                
-                if not info:
+                info = entries[0]
+            elif info.get("entries"):
+                entries = info["entries"]
+                if not entries:
                     raise ValueError("No music found")
-                
-                title = info.get("title") or "VTH Music"
-                audio_url = info.get("url")
-                
-                if not audio_url:
-                    formats = info.get("formats") or []
-                    audio_formats = [
-                        f for f in formats
-                        if f.get("acodec") not in (None, "none")
-                        and f.get("vcodec") in (None, "none")
-                    ]
-                    if not audio_formats:
-                        raise ValueError("No playable audio stream")
-                    
-                    audio_formats.sort(
-                        key=lambda f: (f.get("tbr") or 0, f.get("quality") or ""),
-                        reverse=True
-                    )
-                    audio_url = audio_formats[0].get("url") or info.get("webpage_url")
-                
-                return {
-                    "title": title,
-                    "url": audio_url,
-                    "thumb": info.get("thumbnail"),
-                    "duration": int(info.get("duration") or 0),
-                    "artist": info.get("uploader") or info.get("channel") or "Unknown",
-                    "genre": info.get("genre") or "",
-                    "webpage_url": info.get("webpage_url"),
-                }
-        
+                info = entries[0]
+
+            if not info:
+                raise ValueError("No music found")
+
+            title = info.get("title") or "VTH Music"
+            video_id = info.get("id") or ""
+            webpage_url = info.get("webpage_url") or (
+                f"https://www.youtube.com/watch?v={video_id}" if video_id else ""
+            )
+            if not webpage_url:
+                raise ValueError("No YouTube source URL available")
+
+            return {
+                "title": title,
+                "video_id": video_id,
+                "id": video_id,
+                "thumb": info.get("thumbnail"),
+                "duration": int(info.get("duration") or 0),
+                "artist": info.get("uploader") or info.get("channel") or "Unknown",
+                "genre": info.get("genre") or "",
+                "webpage_url": webpage_url,
+                "source_url": webpage_url,
+                "url": webpage_url,
+            }
+
         except Exception as e:
-            log_error(e, "Metadata download failed")
-            error_text = str(e)
-            if "Sign in to confirm" in error_text or "not a bot" in error_text:
-                raise ValueError(
-                    "YouTube requires authentication. Configure fresh cookies "
-                    "with YOUTUBE_COOKIES_B64 and try again."
-                ) from e
-            raise ValueError(f"Failed to get track: {str(e)}")
+            log_error(e, "Metadata lookup failed")
+            raise ValueError(f"Failed to get track: {str(e)}") from e
 
     async def _refresh_player(self, chat_id: int):
         """Refresh the player message with updated state."""
@@ -304,13 +284,15 @@ class MusicBot:
                     continue
                 tracks.append({
                     "title": metadata["title"],
-                    "url": metadata["url"],
+                    "url": metadata.get("webpage_url") or metadata.get("url"),
+                    "source_url": metadata.get("webpage_url") or metadata.get("url"),
+                    "video_id": metadata.get("video_id") or metadata.get("id"),
                     "thumb": metadata.get("thumbnail"),
                     "query": query,
                     "duration": metadata.get("duration", 0),
                     "artist": metadata.get("artist", favorite.get("artist", "Unknown")),
                     "genre": metadata.get("genre", ""),
-                    "webpage_url": metadata.get("webpage_url"),
+                    "webpage_url": metadata.get("webpage_url") or metadata.get("url"),
                     "requested_by": requested_by,
                 })
         finally:
@@ -334,7 +316,7 @@ class MusicBot:
         state.current_index = 0
         state.current = state.queue[0]
         state.loop = "favorites" if loop_all else "off"
-        await self._play_real_track(chat_id, state.current["title"], state.current["url"])
+        await self._play_real_track(chat_id, state.current)
         return True
 
     async def _handle_template_command(
@@ -392,15 +374,9 @@ class MusicBot:
             playback_logger.info(f"Queue empty for chat {chat_id}")
             return
         
-        # Handle loop one
         if state.loop == "one":
-            # Replay current track
             if state.current:
-                await self._play_real_track(
-                    chat_id,
-                    state.current["title"],
-                    state.current["url"]
-                )
+                await self._play_real_track(chat_id, state.current)
             return
 
         if state.loop == "favorites" and state.current:
@@ -412,11 +388,7 @@ class MusicBot:
                 following = [index for index in favorite_indexes if index > state.current_index]
                 state.current_index = following[0] if following else favorite_indexes[0]
                 state.current = state.queue[state.current_index]
-                await self._play_real_track(
-                    chat_id,
-                    state.current["title"],
-                    state.current["url"],
-                )
+                await self._play_real_track(chat_id, state.current)
                 return
             state.loop = "off"
 
@@ -425,11 +397,7 @@ class MusicBot:
             state.queue.append(finished)
             state.current_index = 0
             state.current = state.queue[0]
-            await self._play_real_track(
-                chat_id,
-                state.current["title"],
-                state.current["url"],
-            )
+            await self._play_real_track(chat_id, state.current)
             return
         
         # Move to next track
@@ -488,11 +456,7 @@ class MusicBot:
         state.current_index = 0
         state.current = state.queue[0]
         
-        await self._play_real_track(
-            chat_id,
-            state.current["title"],
-            state.current["url"]
-        )
+        await self._play_real_track(chat_id, state.current)
 
     async def _on_stream_end(self, client, update):
         """Handle stream end event."""
@@ -556,20 +520,26 @@ class MusicBot:
 
         await self.user_app.get_chat_member(chat_id, "me")
 
-    async def _play_real_track(self, chat_id: int, title: str, url: str):
-        """Start playback of a track."""
-        if not url:
-            raise ValueError("No playable URL found")
-        
+    async def _play_real_track(self, chat_id: int, track: dict):
+        """Start playback of a track by resolving a fresh audio stream from its source URL."""
+        if not track:
+            raise ValueError("No track selected")
+
+        title = track.get("title") or "Unknown track"
+        source = track.get("webpage_url") or track.get("source_url") or track.get("url") or track.get("video_id")
+        if not source:
+            raise ValueError(f"No playable source URL for {title}")
+
         try:
-            stream = MediaStream(url, audio_parameters=AudioQuality.HIGH)
+            fresh_stream = await extract_audio_stream(source)
+            audio_url = fresh_stream.get("url")
+            if not audio_url:
+                raise ValueError(f"yt-dlp returned no direct audio URL for {title}")
+
+            stream = MediaStream(audio_url, audio_parameters=AudioQuality.HIGH)
             state = self.players.get(chat_id)
-            track = state.current or {}
-            
-            video_path = snap_video_path()
             duration = track.get("duration") or 0
-            duration_text = format_duration(duration) if duration else "Live"
-            
+
             caption = await self._player_text(
                 title=title,
                 artist=track.get('artist', 'Unknown'),
@@ -587,42 +557,35 @@ class MusicBot:
             )
 
             await self._ensure_user_membership(chat_id)
-            
-            # Delete old player message
+
             old_message_id = self.player_messages.get(chat_id)
             if old_message_id:
                 try:
                     await self.bot_app.delete_messages(chat_id, old_message_id)
                 except Exception:
                     pass
-            
+
             async def start_voice():
                 await self.call.play(
                     chat_id,
                     stream,
                     config=GroupCallConfig(auto_start=True),
                 )
-            
+
             async def send_player_post():
                 try:
                     bot_api = TelegramAPI()
                     try:
-                        if video_path:
-                            result = await bot_api.send_video(
-                                chat_id, video_path, caption=bot_api_html(caption),
-                                reply_markup=markup, parse_mode="HTML"
-                            )
-                        else:
-                            result = await bot_api.send_message(
-                                chat_id, bot_api_html(caption), reply_markup=markup,
-                                parse_mode="HTML"
-                            )
+                        result = await bot_api.send_message(
+                            chat_id, bot_api_html(caption), reply_markup=markup,
+                            parse_mode="HTML"
+                        )
                     finally:
                         await bot_api.close()
 
                     player_message_id = result["message_id"]
                     self.player_messages[chat_id] = player_message_id
-                    self.player_message_modes[chat_id] = "caption" if video_path else "text"
+                    self.player_message_modes[chat_id] = "text"
 
                     try:
                         await self.bot_app.pin_chat_message(
@@ -631,13 +594,12 @@ class MusicBot:
                     except Exception:
                         pass
                     return
-                
                 except Exception as e:
                     log_error(e, f"Failed to send player post for {chat_id}")
-            
+
             await asyncio.gather(start_voice(), send_player_post())
-            playback_logger.info(f"Started playing: {title} in chat {chat_id}")
-        
+            playback_logger.info(f"[PLAYER] Stream started: {title} in chat {chat_id}")
+
         except Exception as e:
             log_error(e, f"Playback failed for: {title}")
             await self.bot_app.send_message(
@@ -664,13 +626,15 @@ class MusicBot:
             
             state.queue.append({
                 "title": metadata["title"],
-                "url": metadata["url"],
-                "thumb": metadata.get("thumb"),
+                "video_id": metadata.get("video_id") or metadata.get("id"),
+                "url": metadata.get("webpage_url") or metadata.get("url"),
+                "source_url": metadata.get("webpage_url") or metadata.get("url"),
+                "thumb": metadata.get("thumb") or metadata.get("thumbnail"),
                 "query": query,
                 "duration": metadata.get("duration", 0),
                 "artist": metadata.get("artist", "Unknown"),
                 "genre": metadata.get("genre", ""),
-                "webpage_url": metadata.get("webpage_url"),
+                "webpage_url": metadata.get("webpage_url") or metadata.get("url"),
                 "requested_by": requested_by,
             })
             
@@ -678,7 +642,7 @@ class MusicBot:
             if state.current is None:
                 state.current = state.queue[0]
                 state.current_index = 0
-                await self._play_real_track(chat_id, metadata["title"], metadata["url"])
+                await self._play_real_track(chat_id, state.current)
                 return
             
             # Otherwise, notify about queue position
@@ -1049,11 +1013,7 @@ class MusicBot:
                     else:
                         state.queue.insert(0, state.current)
                     
-                    await self._play_real_track(
-                        chat_id,
-                        state.current["title"],
-                        state.current["url"]
-                    )
+                    await self._play_real_track(chat_id, state.current)
                     await callback.answer(f"⏮ Previous by {actor}")
                 else:
                     await callback.answer("No previous track")
@@ -1111,50 +1071,10 @@ class MusicBot:
             
             elif action == "replay":
                 if state.current:
-                    await self._play_real_track(
-                        chat_id,
-                        state.current["title"],
-                        state.current["url"]
-                    )
+                    await self._play_real_track(chat_id, state.current)
                     await callback.answer("Replay started")
                 else:
                     await callback.answer("No track to replay")
-                return
-            
-            elif action == "download":
-                track = state.current
-                url = track.get("webpage_url") if track else None
-                if url:
-                    await callback.answer("Downloading audio...")
-                    progress_message = await self.bot_app.send_message(
-                        chat_id,
-                        f"Downloading {track['title']}..."
-                    )
-                    filepath = None
-                    try:
-                        filepath = await download_audio(url)
-                        if not filepath:
-                            await progress_message.edit_text("Audio download failed")
-                            return
-
-                        await progress_message.delete()
-                        await self.bot_app.send_audio(
-                            chat_id,
-                            filepath,
-                            caption=f"🎵 {track['title']}",
-                            title=track.get("title"),
-                            performer=track.get("artist"),
-                            duration=track.get("duration", 0),
-                        )
-                    except Exception as error:
-                        await progress_message.edit_text(
-                            f"Audio download failed: {safe_escape(str(error)[:150])}"
-                        )
-                    finally:
-                        if filepath:
-                            cleanup_download(filepath)
-                else:
-                    await callback.answer("Audio download unavailable")
                 return
             
             elif action == "favorite":

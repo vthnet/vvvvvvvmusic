@@ -33,8 +33,10 @@ class PlayerManager:
             "title": title,
             "audio_url": audio_url,
             "video_url": video_url,
-            **kwargs
+            **kwargs,
         }
+        if "webpage_url" not in track and "url" in kwargs:
+            track["webpage_url"] = kwargs["url"]
         state.queue.append(track)
         if state.current is None and state.queue:
             state.current = state.queue[0]

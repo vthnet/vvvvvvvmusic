@@ -297,3 +297,5 @@ Song : {title}
 2026-09-03 05:42:52 | bot | INFO | YouTube cookies are not configured; continuing without authenticated cookies.
 2026-09-03 05:42:52 | bot | WARNING | YouTube cookie configuration is invalid.
 2026-09-03 05:42:53 | bot | INFO | YouTube cookies loaded from YOUTUBE_COOKIES_B64.
+2026-09-03 08:18:35 | bot | INFO | [YT] Extracting fresh audio stream: https://www.youtube.com/watch?v=K0HSD_i2DvA
+2026-09-03 08:18:38 | bot | INFO | [YT] Fresh audio URL extracted for K0HSD_i2DvA
