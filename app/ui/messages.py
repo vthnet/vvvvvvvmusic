@@ -191,6 +191,34 @@ def favorites_text(favorites: list, page: int = 1, per_page: int = 10) -> str:
     return text
 
 
+def help_text() -> str:
+    """Generate a compact categorized command and controls guide."""
+    return (
+        "❖ <b>VTH MUSIC HELP</b>\n\n"
+        "<blockquote><b>PLAYBACK</b>\n"
+        "/play &lt;song or link&gt; - Play or queue a song\n"
+        "/queue - View the queue\n"
+        "/pause /resume - Pause or continue\n"
+        "/skip - Play the next track\n"
+        "/stop - Stop and clear playback</blockquote>\n"
+        "<blockquote><b>FAVORITES</b>\n"
+        "/favorites - View your saved favorites\n"
+        "/myfavourites - Queue and play favorites in a group\n"
+        "❤️ Favorite button - Save the current song\n"
+        "🗑 Remove - Delete a saved favorite</blockquote>\n"
+        "<blockquote><b>PLAYER BUTTONS</b>\n"
+        "⏮ ⏭ Previous / next\n"
+        "🔁 Loop: this song, favorites, all songs, off\n"
+        "⚡ Autoplay - Add random related songs\n"
+        "🔀 Shuffle - Mix upcoming songs\n"
+        "⬇ Download • ↺ Replay • ☰ Queue</blockquote>\n"
+        "<blockquote><b>OWNER</b>\n"
+        "/setstart, /setplayer - Save custom messages\n"
+        "/setstartquote, /setplayerquote - Force a quote\n"
+        "/resetstart, /resetplayer - Restore defaults</blockquote>"
+    )
+
+
 def history_text(history: list, page: int = 1, per_page: int = 10) -> str:
     """Generate history message."""
     if not history:

@@ -1,4 +1,4 @@
-from app.ui.messages import bot_api_html, player_text, render_template, search_results_text, queue_text, favorites_text, history_text
+from app.ui.messages import bot_api_html, help_text, player_text, render_template, search_results_text, queue_text, favorites_text, history_text
 """
 Main bot file for VTH Music Bot - Professional Telegram music player
 """
@@ -712,6 +712,7 @@ class MusicBot:
                 or text.startswith("/resume")
                 or text.startswith("/skip")
                 or text.startswith("/stop")
+                or command in {"/playfav", "/myfavourites", "/myfavorites"}
                 or plain_play is not None
             )
             
@@ -731,7 +732,13 @@ class MusicBot:
                 await self._send_favorites(chat_id, user_id)
                 return
 
-            if command == "/playfav":
+            if command in {"/playfav", "/myfavourites", "/myfavorites"}:
+                if chat_id >= 0:
+                    await self.bot_app.send_message(
+                        chat_id,
+                        "🎵 Use /myfavourites inside a group chat to start your favorite queue."
+                    )
+                    return
                 favorites = await get_user_favorites(user_id, limit=500)
                 await self._play_favorites(
                     chat_id, favorites, _user_mention(message.from_user)
@@ -884,6 +891,15 @@ class MusicBot:
         if not callback.data:
             return
 
+        if callback.data == "help":
+            await self.bot_app.send_message(
+                callback.message.chat.id,
+                help_text(),
+                parse_mode=enums.ParseMode.HTML,
+            )
+            await callback.answer("Help opened")
+            return
+
         if callback.data.startswith("favorites:"):
             parts = callback.data.split(":")
             action = parts[1]
@@ -891,6 +907,14 @@ class MusicBot:
             if not user_id or not callback.message:
                 return
             chat_id = callback.message.chat.id
+
+            if action in {"playall", "loopall", "play"} and chat_id < 0:
+                if not await can_control_player(self.bot_app, chat_id, user_id):
+                    await callback.answer(
+                        "Only group admins/DJs can start favorite playback.",
+                        show_alert=True,
+                    )
+                    return
 
             if action == "list":
                 await self._send_favorites(chat_id, user_id, message_id=callback.message.id)
@@ -901,6 +925,12 @@ class MusicBot:
                 )
                 await callback.answer("Favorites page updated")
             elif action in {"playall", "loopall"}:
+                if chat_id >= 0:
+                    await callback.answer(
+                        "Use /myfavourites inside a group chat to play favorites.",
+                        show_alert=True,
+                    )
+                    return
                 favorites = await get_user_favorites(user_id, limit=500)
                 played = await self._play_favorites(
                     chat_id, favorites, _user_mention(callback.from_user),
@@ -908,6 +938,12 @@ class MusicBot:
                 )
                 await callback.answer("Favorite queue started" if played else "No favorites to play")
             elif action == "play" and len(parts) == 3:
+                if chat_id >= 0:
+                    await callback.answer(
+                        "Use /myfavourites inside a group chat to play favorites.",
+                        show_alert=True,
+                    )
+                    return
                 favorites = await get_user_favorites(user_id, limit=500)
                 favorite = next(
                     (item for item in favorites if item.get("track_id") == parts[2]),
@@ -1136,7 +1172,7 @@ class MusicBot:
         # Register handlers
         @self.bot_app.on_message(
             filters.command([
-                "start", "help", "play", "playfav", "favorites", "favourites", "queue", "pause", "resume", "skip", "stop",
+                "start", "help", "play", "playfav", "myfavourites", "myfavorites", "favorites", "favourites", "queue", "pause", "resume", "skip", "stop",
                 "setstart", "set_start", "setplayer", "set_player",
                 "setstartquote", "set_start_quote", "setplayerquote", "set_player_quote",
                 "resetstart", "reset_start", "resetplayer", "reset_player",
@@ -1154,7 +1190,7 @@ class MusicBot:
                 )
         
         @self.bot_app.on_message(filters.text & ~filters.command([
-            "start", "help", "play", "playfav", "favorites", "favourites", "queue", "pause", "resume", "skip", "stop",
+            "start", "help", "play", "playfav", "myfavourites", "myfavorites", "favorites", "favourites", "queue", "pause", "resume", "skip", "stop",
             "setstart", "set_start", "setplayer", "set_player",
             "setstartquote", "set_start_quote", "setplayerquote", "set_player_quote",
             "resetstart", "reset_start", "resetplayer", "reset_player"
@@ -1165,7 +1201,7 @@ class MusicBot:
             except Exception as e:
                 log_error(e, "Text handler error")
         
-        @self.bot_app.on_callback_query(filters.regex(r"^(player:|favorites:)"))
+        @self.bot_app.on_callback_query(filters.regex(r"^(player:|favorites:|help$)"))
         async def on_callback(client: Client, callback: CallbackQuery):
             try:
                 await self._handle_callback(client, callback)
