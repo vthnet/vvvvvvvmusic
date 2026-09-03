@@ -1,21 +1,19 @@
 """YouTube search and metadata extraction service."""
 import asyncio
 from app.utils.errors import SearchError
+from app.services.youtube import youtube_ydl_opts
 import yt_dlp
 
 
 async def search_youtube(query: str, max_results: int = 5) -> list:
     """Search YouTube and return results."""
     try:
-        ydl_opts = {
-            "quiet": True,
+        ydl_opts = youtube_ydl_opts({
             "skip_download": True,
-            "noplaylist": True,
-            "no_warnings": True,
             "extract_flat": True,
             "default_search": "ytsearch",
             "playlistend": max_results,
-        }
+        })
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = await asyncio.to_thread(
@@ -58,14 +56,11 @@ async def search_youtube(query: str, max_results: int = 5) -> list:
 async def get_track_info(query: str) -> dict:
     """Get detailed track information."""
     try:
-        ydl_opts = {
-            "quiet": True,
+        ydl_opts = youtube_ydl_opts({
             "skip_download": True,
-            "noplaylist": True,
-            "no_warnings": True,
             "extract_flat": False,
             "default_search": "ytsearch",
-        }
+        })
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = await asyncio.to_thread(
@@ -123,11 +118,9 @@ async def get_track_info(query: str) -> dict:
 async def is_video_available(url: str) -> bool:
     """Check if video is available for playback."""
     try:
-        ydl_opts = {
-            "quiet": True,
+        ydl_opts = youtube_ydl_opts({
             "skip_download": True,
-            "no_warnings": True,
-        }
+        })
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = await asyncio.to_thread(

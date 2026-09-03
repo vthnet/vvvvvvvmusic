@@ -12,4 +12,6 @@ ENV/
 .env
 .env.*
 !.env.example
+cookies.txt
+*.cookies
 

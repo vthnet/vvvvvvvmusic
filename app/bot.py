@@ -38,6 +38,7 @@ from app.ui.messages import POWERED_BY, player_text, render_template, search_res
 from app.services.search import search_youtube, get_track_info
 from app.services.downloader import download_audio, cleanup_download
 from app.services.lyrics import get_lyrics
+from app.services.youtube import youtube_ydl_opts
 from app.services.telegram_api import TelegramAPI
 from app.database.client import get_database, DatabaseClient
 from app.database.users import get_or_create_user, get_user_count, block_user, unblock_user, get_all_users
@@ -132,15 +133,12 @@ class MusicBot:
 
     async def _download_metadata(self, query: str) -> dict:
         """Download track metadata using yt-dlp."""
-        ydl_opts = {
-            "quiet": True,
+        ydl_opts = youtube_ydl_opts({
             "skip_download": True,
-            "noplaylist": True,
-            "no_warnings": True,
             "extract_flat": False,
             "default_search": "ytsearch",
             "format": "bestaudio/best",
-        }
+        })
         
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:

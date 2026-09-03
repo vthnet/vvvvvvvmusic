@@ -4,6 +4,7 @@ import os
 from uuid import uuid4
 from pathlib import Path
 from app.utils.errors import DownloadError
+from app.services.youtube import youtube_ydl_opts
 import yt_dlp
 
 
@@ -18,19 +19,16 @@ MAX_DOWNLOAD_SIZE = 500 * 1024 * 1024
 async def download_audio(url: str, quality: str = "192") -> str | None:
     """Download audio from URL."""
     try:
-        ydl_opts = {
+        ydl_opts = youtube_ydl_opts({
             "format": "bestaudio",
             "postprocessors": [{
                 "key": "FFmpegExtractAudio",
                 "preferredcodec": "mp3",
                 "preferredquality": quality,
             }],
-            "quiet": True,
-            "no_warnings": True,
             "outtmpl": str(DOWNLOAD_DIR / f"{uuid4().hex}_%(title)s.%(ext)s"),
             "max_filesize": MAX_DOWNLOAD_SIZE,
-            "socket_timeout": 30,
-        }
+        })
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = await asyncio.to_thread(
@@ -53,14 +51,11 @@ async def download_audio(url: str, quality: str = "192") -> str | None:
 async def download_video(url: str, quality: str = "best") -> str | None:
     """Download video from URL."""
     try:
-        ydl_opts = {
+        ydl_opts = youtube_ydl_opts({
             "format": quality,
-            "quiet": True,
-            "no_warnings": True,
             "outtmpl": str(DOWNLOAD_DIR / "%(title)s.%(ext)s"),
             "max_filesize": MAX_DOWNLOAD_SIZE,
-            "socket_timeout": 30,
-        }
+        })
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = await asyncio.to_thread(
