@@ -66,12 +66,24 @@ def youtube_ydl_opts(extra_options: dict | None = None) -> dict:
         "no_warnings": True,
         "noplaylist": True,
         "socket_timeout": 30,
+
+        # YouTube currently requires newer player-client handling
+        # for some authenticated requests.
+        "extractor_args": {
+            "youtube": {
+                "player_client": ["default", "web_embedded"]
+            }
+        },
     }
 
+    # Load YouTube cookies configured through Railway environment variables
+    # or a local cookie-file path.
     cookie_file = get_youtube_cookie_file()
     if cookie_file:
         options["cookiefile"] = cookie_file
 
+    # Allow individual services to override/add yt-dlp options.
     if extra_options:
         options.update(extra_options)
+
     return options
