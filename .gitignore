@@ -1,12 +1,6 @@
 # Python
 __pycache__/
-*.py[cod]
-*$py.class
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.coverage
-htmlcov/
+
 
 # Virtual environments
 .venv/
@@ -19,14 +13,3 @@ ENV/
 .env.*
 !.env.example
 
-# Telegram sessions and local runtime state
-*.session
-*.session-journal
-
-# Generated runtime files
-
-# Local editor and OS files
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
