@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Telegram sessions and local runtime state
+*.session
+*.session-journal
+
+# Generated runtime files
+downloads/*
+logs/*
+assets/snaps/*.mp4
+
+# Local editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
