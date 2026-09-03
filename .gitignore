@@ -13,5 +13,8 @@ ENV/
 .env.*
 !.env.example
 cookies.txt
+*.cookie
 *.cookies
+*.session
+*.session-journal
 
