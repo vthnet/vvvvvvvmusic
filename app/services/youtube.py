@@ -10,12 +10,13 @@ def youtube_ydl_opts(extra_options: dict | None = None) -> dict:
     """Build a shared yt-dlp configuration without cookie requirements."""
     options = {
         "quiet": True,
-        "no_warnings": True,
+        "no_warnings": False,
         "noplaylist": True,
         "socket_timeout": 30,
         "js_runtimes": {
             "deno": {},
         },
+        "remote_components": ["ejs:github"],
     }
 
     if extra_options:
@@ -40,10 +41,16 @@ async def extract_audio_stream(source: str) -> dict:
             "noplaylist": True,
         })
 
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = await asyncio.to_thread(
-                lambda: ydl.extract_info(source_url, download=False)
-            )
+        bot_logger.info(f"[YT] Starting extract_audio_stream for {source_url}")
+
+        def _extract_info():
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                return ydl.extract_info(source_url, download=False)
+
+        info = await asyncio.wait_for(
+            asyncio.to_thread(_extract_info),
+            timeout=45,
+        )
 
         if not info:
             raise ValueError("No audio stream found")

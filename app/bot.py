@@ -6,6 +6,8 @@ import asyncio
 import json
 import random
 import re
+import shutil
+import sys
 from html import escape
 from typing import Optional
 from datetime import datetime
@@ -28,7 +30,7 @@ from pytgcalls.types import AudioQuality, GroupCallConfig, MediaStream, StreamEn
 
 # App imports
 from app import config
-from app.handlers.start import send_home, to_pyrogram_keyboard
+from app.handlers.start import send_home, to_pyrogram_keyboard, snap_video_path
 from app.player.state import PlayerManager
 from app.utils.logger import bot_logger, playback_logger, error_logger, log_command, log_error
 from app.utils.permissions import is_owner, is_group_admin, is_dj_or_admin, can_control_player, can_change_settings
@@ -531,12 +533,17 @@ class MusicBot:
             raise ValueError(f"No playable source URL for {title}")
 
         try:
-            fresh_stream = await extract_audio_stream(source)
+            bot_logger.info(f"[PLAYER] Resolving fresh audio stream for {title} ({source})")
+            fresh_stream = await asyncio.wait_for(extract_audio_stream(source), timeout=45)
             audio_url = fresh_stream.get("url")
             if not audio_url:
                 raise ValueError(f"yt-dlp returned no direct audio URL for {title}")
 
-            stream = MediaStream(audio_url, audio_parameters=AudioQuality.HIGH)
+            stream = MediaStream(
+                audio_url,
+                audio_parameters=AudioQuality.HIGH,
+                video_flags=MediaStream.Flags.IGNORE,
+            )
             state = self.players.get(chat_id)
             duration = track.get("duration") or 0
 
@@ -556,6 +563,7 @@ class MusicBot:
                 loop=state.loop
             )
 
+            bot_logger.info(f"[PLAYER] Ensuring account is in voice chat for {chat_id}")
             await self._ensure_user_membership(chat_id)
 
             old_message_id = self.player_messages.get(chat_id)
@@ -566,26 +574,42 @@ class MusicBot:
                     pass
 
             async def start_voice():
-                await self.call.play(
-                    chat_id,
-                    stream,
-                    config=GroupCallConfig(auto_start=True),
+                bot_logger.info(f"[PLAYER] Calling PyTgCalls play for {chat_id}: {title}")
+                await asyncio.wait_for(
+                    self.call.play(
+                        chat_id,
+                        stream,
+                        config=GroupCallConfig(auto_start=True),
+                    ),
+                    timeout=30,
                 )
 
             async def send_player_post():
                 try:
+                    snap_video = snap_video_path()
                     bot_api = TelegramAPI()
                     try:
-                        result = await bot_api.send_message(
-                            chat_id, bot_api_html(caption), reply_markup=markup,
-                            parse_mode="HTML"
-                        )
+                        if snap_video:
+                            result = await bot_api.send_video(
+                                chat_id,
+                                snap_video,
+                                caption=bot_api_html(caption),
+                                reply_markup=markup,
+                                parse_mode="HTML",
+                            )
+                            message_mode = "video"
+                        else:
+                            result = await bot_api.send_message(
+                                chat_id, bot_api_html(caption), reply_markup=markup,
+                                parse_mode="HTML"
+                            )
+                            message_mode = "text"
                     finally:
                         await bot_api.close()
 
                     player_message_id = result["message_id"]
                     self.player_messages[chat_id] = player_message_id
-                    self.player_message_modes[chat_id] = "text"
+                    self.player_message_modes[chat_id] = message_mode
 
                     try:
                         await self.bot_app.pin_chat_message(
@@ -601,6 +625,7 @@ class MusicBot:
             playback_logger.info(f"[PLAYER] Stream started: {title} in chat {chat_id}")
 
         except Exception as e:
+            bot_logger.exception(f"[PLAYER] Playback failed for: {title}")
             log_error(e, f"Playback failed for: {title}")
             await self.bot_app.send_message(
                 chat_id,
@@ -1115,6 +1140,19 @@ class MusicBot:
             raise RuntimeError("STRING_SESSION is required")
         
         bot_logger.info("🎵 VTH MUSIC BOT STARTING...")
+        bot_logger.info(
+            "[ENV] Python=%s yt-dlp=%s PyTgCalls=%s FFmpeg=%s ffprobe=%s Deno=%s",
+            sys.version.split()[0],
+            getattr(yt_dlp.version, "__version__", "unknown"),
+            getattr(__import__("pytgcalls"), "__version__", "unknown"),
+            shutil.which("ffmpeg") or "missing",
+            shutil.which("ffprobe") or "missing",
+            shutil.which("deno") or "missing",
+        )
+        bot_logger.info(
+            "[ENV] YouTube cookies configured=%s",
+            bool(getattr(config, "YOUTUBE_COOKIES", "")),
+        )
         
         # Initialize database
         await self.initialize()

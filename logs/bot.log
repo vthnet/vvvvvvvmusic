@@ -299,3 +299,29 @@ Song : {title}
 2026-09-03 05:42:53 | bot | INFO | YouTube cookies loaded from YOUTUBE_COOKIES_B64.
 2026-09-03 08:18:35 | bot | INFO | [YT] Extracting fresh audio stream: https://www.youtube.com/watch?v=K0HSD_i2DvA
 2026-09-03 08:18:38 | bot | INFO | [YT] Fresh audio URL extracted for K0HSD_i2DvA
+2026-09-03 08:56:35 | bot | INFO | 🎵 VTH MUSIC BOT STARTING...
+2026-09-03 08:56:35 | bot | INFO | [ENV] Python=3.11.9 yt-dlp=2026.08.19 PyTgCalls=2.2.11 FFmpeg=C:\Users\akash thakur\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0-full_build\bin\ffmpeg.EXE ffprobe=C:\Users\akash thakur\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0-full_build\bin\ffprobe.EXE Deno=missing
+2026-09-03 08:56:35 | bot | INFO | [ENV] YouTube cookies configured=False
+2026-09-03 08:56:38 | bot | INFO | Database connected successfully
+2026-09-03 08:56:54 | bot | INFO | ✅ VTH MUSIC BOT STARTED SUCCESSFULLY
+2026-09-03 08:56:54 | bot | INFO | Bot is running and listening for commands...
+2026-09-03 09:01:53 | bot | INFO | [PLAYER] Resolving fresh audio stream for O Sahib OST - Complete Soundtrack of Abdullahpur Ka Devdas | Adnan Dhool (https://www.youtube.com/watch?v=dZ9jCtcC9NI)
+2026-09-03 09:01:53 | bot | INFO | [YT] Extracting fresh audio stream: https://www.youtube.com/watch?v=dZ9jCtcC9NI
+2026-09-03 09:01:53 | bot | INFO | [YT] Starting extract_audio_stream for https://www.youtube.com/watch?v=dZ9jCtcC9NI
+2026-09-03 09:01:56 | bot | INFO | [YT] Fresh audio URL extracted for dZ9jCtcC9NI
+2026-09-03 09:01:57 | bot | INFO | [PLAYER] Ensuring account is in voice chat for -1004399351698
+2026-09-03 09:01:57 | bot | INFO | [PLAYER] Calling PyTgCalls play for -1004399351698: O Sahib OST - Complete Soundtrack of Abdullahpur Ka Devdas | Adnan Dhool
+2026-09-03 09:04:17 | bot | INFO | Shutting down bot...
+2026-09-03 09:04:17 | bot | INFO | Bot shutdown complete
+2026-09-03 09:04:38 | bot | INFO | 🎵 VTH MUSIC BOT STARTING...
+2026-09-03 09:04:38 | bot | INFO | [ENV] Python=3.11.9 yt-dlp=2026.08.19 PyTgCalls=2.2.11 FFmpeg=C:\Users\akash thakur\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0-full_build\bin\ffmpeg.EXE ffprobe=C:\Users\akash thakur\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0-full_build\bin\ffprobe.EXE Deno=missing
+2026-09-03 09:04:38 | bot | INFO | [ENV] YouTube cookies configured=False
+2026-09-03 09:04:42 | bot | INFO | Database connected successfully
+2026-09-03 09:04:56 | bot | INFO | ✅ VTH MUSIC BOT STARTED SUCCESSFULLY
+2026-09-03 09:04:56 | bot | INFO | Bot is running and listening for commands...
+2026-09-03 09:05:14 | bot | INFO | [PLAYER] Resolving fresh audio stream for Andaaz e Karam (Official Video) Madhur Sharma, Moin, ER, Roheb (https://www.youtube.com/watch?v=__bHEfJ29j0)
+2026-09-03 09:05:14 | bot | INFO | [YT] Extracting fresh audio stream: https://www.youtube.com/watch?v=__bHEfJ29j0
+2026-09-03 09:05:14 | bot | INFO | [YT] Starting extract_audio_stream for https://www.youtube.com/watch?v=__bHEfJ29j0
+2026-09-03 09:05:17 | bot | INFO | [YT] Fresh audio URL extracted for __bHEfJ29j0
+2026-09-03 09:05:17 | bot | INFO | [PLAYER] Ensuring account is in voice chat for -1004399351698
+2026-09-03 09:05:17 | bot | INFO | [PLAYER] Calling PyTgCalls play for -1004399351698: Andaaz e Karam (Official Video) Madhur Sharma, Moin, ER, Roheb
