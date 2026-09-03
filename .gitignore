@@ -24,9 +24,6 @@ ENV/
 *.session-journal
 
 # Generated runtime files
-downloads/*
-logs/*
-assets/snaps/*.mp4
 
 # Local editor and OS files
 .vscode/

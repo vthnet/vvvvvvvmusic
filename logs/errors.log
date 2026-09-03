@@ -1,0 +1,541 @@
+2026-09-03 00:22:43 | error | ERROR | Callback handler failed: Telegram says: [400 MD5_CHECKSUM_INVALID] - The file's checksum did not match the md5_checksum parameter (caused by "messages.SendMedia")
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 806, in _handle_callback
+    await self.bot_app.send_audio(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\messages\send_audio.py", line 215, in send_audio
+    r = await self.invoke(
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\advanced\invoke.py", line 79, in invoke
+    r = await self.session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 389, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 357, in send
+    RPCError.raise_it(result, type(data))
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\errors\rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.Md5ChecksumInvalid: Telegram says: [400 MD5_CHECKSUM_INVALID] - The file's checksum did not match the md5_checksum parameter (caused by "messages.SendMedia")
+2026-09-03 00:22:43 | error | ERROR | Callback handler error: Telegram says: [400 QUERY_ID_INVALID] - The callback query id is invalid (caused by "messages.SetBotCallbackAnswer")
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 806, in _handle_callback
+    await self.bot_app.send_audio(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\messages\send_audio.py", line 215, in send_audio
+    r = await self.invoke(
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\advanced\invoke.py", line 79, in invoke
+    r = await self.session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 389, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 357, in send
+    RPCError.raise_it(result, type(data))
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\errors\rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.Md5ChecksumInvalid: Telegram says: [400 MD5_CHECKSUM_INVALID] - The file's checksum did not match the md5_checksum parameter (caused by "messages.SendMedia")
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 890, in on_callback
+    await self._handle_callback(client, callback)
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 848, in _handle_callback
+    await callback.answer(f"Error: {str(e)[:50]}", show_alert=True)
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\types\bots_and_keyboards\callback_query.py", line 159, in answer
+    return await self._client.answer_callback_query(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\bots\answer_callback_query.py", line 73, in answer_callback_query
+    return await self.invoke(
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\advanced\invoke.py", line 79, in invoke
+    r = await self.session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 389, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 357, in send
+    RPCError.raise_it(result, type(data))
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\errors\rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.QueryIdInvalid: Telegram says: [400 QUERY_ID_INVALID] - The callback query id is invalid (caused by "messages.SetBotCallbackAnswer")
+2026-09-03 00:28:45 | error | ERROR | Callback handler failed: 'PlayerState' object has no attribute 'cycle_loop'
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 749, in _handle_callback
+    state.cycle_loop(chat_id)
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'PlayerState' object has no attribute 'cycle_loop'
+2026-09-03 00:28:53 | error | ERROR | Callback handler failed: 'PlayerState' object has no attribute 'toggle_shuffle'
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 742, in _handle_callback
+    state.toggle_shuffle(chat_id)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PlayerState' object has no attribute 'toggle_shuffle'
+2026-09-03 00:33:58 | error | ERROR | Player refresh failed: Telegram says: [400 MESSAGE_NOT_MODIFIED] - The message was not modified because you tried to edit it using the same content (caused by "messages.EditMessage")
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 219, in _refresh_player
+    await edit_method(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\messages\edit_message_caption.py", line 69, in edit_message_caption
+    return await self.edit_message_text(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\messages\edit_message_text.py", line 82, in edit_message_text
+    r = await self.invoke(
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\advanced\invoke.py", line 79, in invoke
+    r = await self.session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 389, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 357, in send
+    RPCError.raise_it(result, type(data))
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\errors\rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.MessageNotModified: Telegram says: [400 MESSAGE_NOT_MODIFIED] - The message was not modified because you tried to edit it using the same content (caused by "messages.EditMessage")
+2026-09-03 00:34:01 | error | ERROR | Player refresh failed: Telegram says: [400 MESSAGE_NOT_MODIFIED] - The message was not modified because you tried to edit it using the same content (caused by "messages.EditMessage")
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 219, in _refresh_player
+    await edit_method(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\messages\edit_message_caption.py", line 69, in edit_message_caption
+    return await self.edit_message_text(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\messages\edit_message_text.py", line 82, in edit_message_text
+    r = await self.invoke(
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\advanced\invoke.py", line 79, in invoke
+    r = await self.session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 389, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 357, in send
+    RPCError.raise_it(result, type(data))
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\errors\rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.MessageNotModified: Telegram says: [400 MESSAGE_NOT_MODIFIED] - The message was not modified because you tried to edit it using the same content (caused by "messages.EditMessage")
+2026-09-03 00:34:09 | error | ERROR | Player refresh failed: Telegram says: [400 MESSAGE_NOT_MODIFIED] - The message was not modified because you tried to edit it using the same content (caused by "messages.EditMessage")
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 219, in _refresh_player
+    await edit_method(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\messages\edit_message_caption.py", line 69, in edit_message_caption
+    return await self.edit_message_text(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\messages\edit_message_text.py", line 82, in edit_message_text
+    r = await self.invoke(
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\advanced\invoke.py", line 79, in invoke
+    r = await self.session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 389, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 357, in send
+    RPCError.raise_it(result, type(data))
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\errors\rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.MessageNotModified: Telegram says: [400 MESSAGE_NOT_MODIFIED] - The message was not modified because you tried to edit it using the same content (caused by "messages.EditMessage")
+2026-09-03 00:34:19 | error | ERROR | Player refresh failed: Telegram says: [400 MESSAGE_NOT_MODIFIED] - The message was not modified because you tried to edit it using the same content (caused by "messages.EditMessage")
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 219, in _refresh_player
+    await edit_method(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\messages\edit_message_caption.py", line 69, in edit_message_caption
+    return await self.edit_message_text(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\messages\edit_message_text.py", line 82, in edit_message_text
+    r = await self.invoke(
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\advanced\invoke.py", line 79, in invoke
+    r = await self.session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 389, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\session\session.py", line 357, in send
+    RPCError.raise_it(result, type(data))
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\errors\rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.MessageNotModified: Telegram says: [400 MESSAGE_NOT_MODIFIED] - The message was not modified because you tried to edit it using the same content (caused by "messages.EditMessage")
+2026-09-03 00:42:28 | error | ERROR | Message handler failed for chat 8021449673: button() got an unexpected keyword argument 'custom_emoji_icon'
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 539, in _handle_message
+    await send_home(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\handlers\start.py", line 24, in send_home
+    keyboard = home_keyboard()
+               ^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\ui\buttons.py", line 51, in home_keyboard
+    button("Add in Group", url="https://t.me/your_bot?startgroup=true", custom_emoji_icon="5238025132177369293", style="primary")
+TypeError: button() got an unexpected keyword argument 'custom_emoji_icon'
+2026-09-03 00:45:17 | error | ERROR | Message handler failed for chat 8021449673: button() got an unexpected keyword argument 'custom_emoji_icon'
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 539, in _handle_message
+    await send_home(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\handlers\start.py", line 24, in send_home
+    keyboard = home_keyboard()
+               ^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\ui\buttons.py", line 51, in home_keyboard
+    button("Add in Group", url="https://t.me/your_bot?startgroup=true", custom_emoji_icon="5238025132177369293", style="primary")
+TypeError: button() got an unexpected keyword argument 'custom_emoji_icon'
+2026-09-03 00:46:25 | error | ERROR | Message handler failed for chat 8021449673: button() got an unexpected keyword argument 'icon_custom_emoji_id'
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 539, in _handle_message
+    await send_home(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\handlers\start.py", line 24, in send_home
+    keyboard = home_keyboard()
+               ^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\ui\buttons.py", line 51, in home_keyboard
+    button("Add in Group", url="https://t.me/your_bot?startgroup=true", icon_custom_emoji_id="5238025132177369293", style="primary")
+TypeError: button() got an unexpected keyword argument 'icon_custom_emoji_id'
+2026-09-03 00:58:24 | error | ERROR | Metadata download failed: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 141, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2026-09-03 00:58:24 | error | ERROR | Queue failed for query: ✦ VTH MUSIC
+Premium music, clean controls and a faster player built for Telegram.
+
+● Welcome, ꪜ 𝚨 𝔩 ꧊᱂ ༏ །༨ • Ⲧͱ꧊𝛂།༨𝛖𐍂
+● Add me to a group and start playing.
+
+Fast • Stable • Premium: Failed to get track: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 141, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 430, in _queue_or_play
+    metadata = await self._download_metadata(query)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 179, in _download_metadata
+    raise ValueError(f"Failed to get track: {str(e)}")
+ValueError: Failed to get track: list index out of range
+2026-09-03 00:58:30 | error | ERROR | Metadata download failed: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 141, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2026-09-03 00:58:30 | error | ERROR | Queue failed for query: ✦ VTH MUSIC
+Premium music, clean controls and a faster player built for Telegram.
+
+● Welcome, ꪜ 𝚨 𝔩 ꧊᱂ ༏ །༨ • Ⲧͱ꧊𝛂།༨𝛖𐍂
+● Add me to a group and start playing.
+
+Fast • Stable • Premium: Failed to get track: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 141, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 430, in _queue_or_play
+    metadata = await self._download_metadata(query)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 179, in _download_metadata
+    raise ValueError(f"Failed to get track: {str(e)}")
+ValueError: Failed to get track: list index out of range
+2026-09-03 00:58:37 | error | ERROR | Metadata download failed: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 141, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2026-09-03 00:58:37 | error | ERROR | Queue failed for query: ✦ VTH MUSIC
+Premium music, clean controls and a faster player built for Telegram.
+
+● Welcome, ꪜ 𝚨 𝔩 ꧊᱂ ༏ །༨ • Ⲧͱ꧊𝛂།༨𝛖𐍂
+● Add me to a group and start playing.
+
+Fast • Stable • Premium: Failed to get track: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 141, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 430, in _queue_or_play
+    metadata = await self._download_metadata(query)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 179, in _download_metadata
+    raise ValueError(f"Failed to get track: {str(e)}")
+ValueError: Failed to get track: list index out of range
+2026-09-03 00:58:38 | error | ERROR | Metadata download failed: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 141, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2026-09-03 00:58:38 | error | ERROR | Queue failed for query: ✦ VTH MUSIC
+Premium music, clean controls and a faster player built for Telegram.
+
+● Welcome, ꪜ 𝚨 𝔩 ꧊᱂ ༏ །༨ • Ⲧͱ꧊𝛂།༨𝛖𐍂
+● Add me to a group and start playing.
+
+Fast • Stable • Premium: Failed to get track: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 141, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 430, in _queue_or_play
+    metadata = await self._download_metadata(query)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 179, in _download_metadata
+    raise ValueError(f"Failed to get track: {str(e)}")
+ValueError: Failed to get track: list index out of range
+2026-09-03 01:02:27 | error | ERROR | Metadata download failed: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 141, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2026-09-03 01:02:27 | error | ERROR | Queue failed for query: ✦ VTH MUSIC
+Premium music, clean controls and a faster player built for Telegram.
+
+● Welcome, ꪜ 𝚨 𝔩 ꧊᱂ ༏ །༨ • Ⲧͱ꧊𝛂།༨𝛖𐍂
+● Add me to a group and start playing.
+
+Fast • Stable • Premium: Failed to get track: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 141, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 430, in _queue_or_play
+    metadata = await self._download_metadata(query)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 179, in _download_metadata
+    raise ValueError(f"Failed to get track: {str(e)}")
+ValueError: Failed to get track: list index out of range
+2026-09-03 01:05:26 | error | ERROR | Callback handler failed: 'PlayerState' object has no attribute 'current_title'
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 720, in _handle_callback
+    await callback.answer(f"⏭ Skipped by {actor}: {state.current_title(chat_id)}")
+                                                   ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PlayerState' object has no attribute 'current_title'
+2026-09-03 01:12:34 | error | ERROR | Player refresh failed: editMessageCaption: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 218, in _refresh_player
+    await bot_api.edit_message_caption(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\services\telegram_api.py", line 60, in edit_message_caption
+    return await self.call("editMessageCaption", data=data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\services\telegram_api.py", line 22, in call
+    raise TelegramAPIError(f"{method}: {payload.get('description')}")
+app.services.telegram_api.TelegramAPIError: editMessageCaption: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2026-09-03 01:14:38 | error | ERROR | Player refresh failed: editMessageCaption: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 218, in _refresh_player
+    await bot_api.edit_message_caption(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\services\telegram_api.py", line 60, in edit_message_caption
+    return await self.call("editMessageCaption", data=data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\services\telegram_api.py", line 22, in call
+    raise TelegramAPIError(f"{method}: {payload.get('description')}")
+app.services.telegram_api.TelegramAPIError: editMessageCaption: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2026-09-03 01:33:09 | error | ERROR | Metadata download failed: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 144, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2026-09-03 01:33:09 | error | ERROR | Queue failed for query: 🎵 VTH MUSIC
+
+Song : {title}
+😽 : {artist}
+⏰Duration :  {duration}
+🥺 Requested by: {requested_by}
+😽 Queue: {queue}
+
+━━━━━━━━━━━━━━
+▶️ NOW PLAYING
+━━━━━━━━━━━━━━: Failed to get track: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 144, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 491, in _queue_or_play
+    metadata = await self._download_metadata(query)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 182, in _download_metadata
+    raise ValueError(f"Failed to get track: {str(e)}")
+ValueError: Failed to get track: list index out of range
+2026-09-03 01:33:37 | error | ERROR | Playback failed for: "Tum Hi Ho" Aashiqui 2 Full Song With Lyrics | Aditya Roy Kapur, Shraddha Kapoor: Telegram says: [400 PEER_ID_INVALID] - The peer id being used is invalid or not known yet. Make sure you meet the peer before interacting with it 
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\advanced\resolve_peer.py", line 62, in resolve_peer
+    return await self.storage.get_peer_by_id(peer_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\storage\sqlite_storage.py", line 142, in get_peer_by_id
+    raise KeyError(f"ID not found: {peer_id}")
+KeyError: 'ID not found: 8021449673'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\advanced\resolve_peer.py", line 123, in resolve_peer
+    return await self.storage.get_peer_by_id(peer_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\storage\sqlite_storage.py", line 142, in get_peer_by_id
+    raise KeyError(f"ID not found: {peer_id}")
+KeyError: 'ID not found: 8021449673'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 477, in _play_real_track
+    await asyncio.gather(start_voice(), send_player_post())
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 440, in start_voice
+    await self.call.play(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pytgcalls\statictypes.py", line 96, in async_wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pytgcalls\mtproto_required.py", line 23, in async_wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pytgcalls\mutex.py", line 12, in async_wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pytgcalls\methods\stream\play.py", line 74, in play
+    await self._app.create_group_call(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pytgcalls\mtproto\mtproto_client.py", line 183, in create_group_call
+    await self._bind_client.create_group_call(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pytgcalls\mtproto\pyrogram_client.py", line 598, in create_group_call
+    peer=await self.resolve_peer(chat_id),
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pytgcalls\mtproto\pyrogram_client.py", line 769, in resolve_peer
+    return await self._app.resolve_peer(user_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\advanced\resolve_peer.py", line 125, in resolve_peer
+    raise PeerIdInvalid
+pyrogram.errors.exceptions.bad_request_400.PeerIdInvalid: Telegram says: [400 PEER_ID_INVALID] - The peer id being used is invalid or not known yet. Make sure you meet the peer before interacting with it 
+2026-09-03 01:39:05 | error | ERROR | Metadata download failed: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 144, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2026-09-03 01:39:05 | error | ERROR | Queue failed for query: 🎁ᴛιᴛʟє: O Sahiba O Sahiba
+👁ᴅᴜʀᴧᴛιση: 4:52 ᴍιη
+🥰ʀєǫᴜєsᴛєᴅ: ꪜ 𝚨 𝔩 ꧊᱂ ༏ །༨ • Ⲧͱ꧊𝛂།༨𝛖𐍂 
+
+🥂 ᴘᴏᴡєʀєᴅ» 𝗦ᴛᴀʟᴋᴇʀ </>: Failed to get track: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 144, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 491, in _queue_or_play
+    metadata = await self._download_metadata(query)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 182, in _download_metadata
+    raise ValueError(f"Failed to get track: {str(e)}")
+ValueError: Failed to get track: list index out of range
+2026-09-03 01:44:23 | error | ERROR | Metadata download failed: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 151, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2026-09-03 01:44:23 | error | ERROR | Queue failed for query: 🎁ᴛιᴛʟє: {title}
+👁ᴅᴜʀᴧᴛιση: {duration}
+🥰ʀєǫᴜєsᴛєᴅ: {requested_by}: Failed to get track: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 151, in _download_metadata
+    info = info["entries"][0]
+           ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 498, in _queue_or_play
+    metadata = await self._download_metadata(query)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 189, in _download_metadata
+    raise ValueError(f"Failed to get track: {str(e)}")
+ValueError: Failed to get track: list index out of range
+2026-09-03 02:24:39 | error | ERROR | Failed to send player post for -1003266613458: sendVideo: Bad Request: can't parse MessageEntity: Unsupported type specified
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 468, in send_player_post
+    result = await bot_api.send_video(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\services\telegram_api.py", line 48, in send_video
+    return await self.call("sendVideo", data=data, files=files)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\services\telegram_api.py", line 22, in call
+    raise TelegramAPIError(f"{method}: {payload.get('description')}")
+app.services.telegram_api.TelegramAPIError: sendVideo: Bad Request: can't parse MessageEntity: Unsupported type specified
+2026-09-03 02:25:36 | error | ERROR | Failed to send player post for -1003266613458: sendVideo: Bad Request: can't parse MessageEntity: Unsupported type specified
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 468, in send_player_post
+    result = await bot_api.send_video(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\services\telegram_api.py", line 48, in send_video
+    return await self.call("sendVideo", data=data, files=files)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\services\telegram_api.py", line 22, in call
+    raise TelegramAPIError(f"{method}: {payload.get('description')}")
+app.services.telegram_api.TelegramAPIError: sendVideo: Bad Request: can't parse MessageEntity: Unsupported type specified
+2026-09-03 03:51:57 | error | ERROR | Message handler failed for chat 8021449673: Invalid parse mode "HTML"
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 634, in _handle_message
+    await send_home(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\handlers\start.py", line 28, in send_home
+    return await api.send_message(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\methods\messages\send_message.py", line 124, in send_message
+    message, entities = (await utils.parse_text_entities(self, text, parse_mode, entities)).values()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\utils.py", line 354, in parse_text_entities
+    text, entities = (await client.parser.parse(text, parse_mode)).values()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\.venv\Lib\site-packages\pyrogram\parser\parser.py", line 54, in parse
+    raise ValueError(f'Invalid parse mode "{mode}"')
+ValueError: Invalid parse mode "HTML"
+2026-09-03 04:01:44 | error | ERROR | Player refresh failed: editMessageCaption: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 235, in _refresh_player
+    await bot_api.edit_message_caption(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\services\telegram_api.py", line 68, in edit_message_caption
+    return await self.call("editMessageCaption", data=data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\services\telegram_api.py", line 22, in call
+    raise TelegramAPIError(f"{method}: {payload.get('description')}")
+app.services.telegram_api.TelegramAPIError: editMessageCaption: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2026-09-03 04:19:21 | error | ERROR | Player refresh failed: editMessageCaption: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+Traceback (most recent call last):
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\bot.py", line 235, in _refresh_player
+    await bot_api.edit_message_caption(
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\services\telegram_api.py", line 68, in edit_message_caption
+    return await self.call("editMessageCaption", data=data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\akash thakur\Desktop\VTHMusic_New_Bot_API10_3\app\services\telegram_api.py", line 22, in call
+    raise TelegramAPIError(f"{method}: {payload.get('description')}")
+app.services.telegram_api.TelegramAPIError: editMessageCaption: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
